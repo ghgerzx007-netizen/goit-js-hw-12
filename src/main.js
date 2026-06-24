@@ -1,12 +1,11 @@
+
 import {createGallery, clearGallery, showLoader,hideLoader, hideLoadMoreButton, showLoadMoreButton,} from './js/render-functions.js';
 import {getImagesByQuery} from './js/pixabay-api.js';
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 const loadMoreBtn = document.querySelector(".load-more")
 
-
-
- let currentQuery = "";
+let currentQuery = "";
 let page = 1;
 const perPage = 15;
 let totalHits = 0;
@@ -26,9 +25,8 @@ form.addEventListener('submit', async e =>{
   } 
   currentQuery = input.value.trim()
 clearGallery();
+hideLoadMoreButton();
 showLoader();
-
-
 
 try {
 const data = await getImagesByQuery(currentQuery,page,perPage);
@@ -39,6 +37,7 @@ const data = await getImagesByQuery(currentQuery,page,perPage);
       iziToast.error({
         message: 'Sorry, there are no images matching your search query. Please try again!'
       });
+      hideLoadMoreButton();
       return;
     }
       createGallery(hits);
@@ -49,6 +48,9 @@ const data = await getImagesByQuery(currentQuery,page,perPage);
       showLoadMoreButton();
     } else {
       hideLoadMoreButton();
+      iziToast.info({
+        message: "We're sorry, but you've reached the end of search results."
+      });
     }
 }
 
@@ -74,12 +76,18 @@ const data = await getImagesByQuery(currentQuery,page,perPage);
      totalHits = data.totalHits;
      const maxPage = Math.ceil(totalHits / perPage);
     const hits = data.hits;
+
+if (!hits || hits.length === 0) {
+  hideLoadMoreButton();
+  return;
+}
+
 createGallery(hits);
 const firstCard = document.querySelector('.gallery li');
 if (firstCard) {
   const cardHeight = firstCard.getBoundingClientRect().height;
   window.scrollBy({
-    top: cardHeight * 3,
+    top: cardHeight * 2,
     behavior: 'smooth',
   });
 }
@@ -106,9 +114,3 @@ finally {
 
   }
   });
-
-
-
-
-
-

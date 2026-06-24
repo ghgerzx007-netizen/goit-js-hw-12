@@ -50,13 +50,12 @@ main:has(.back-link) {
 }
 
 .load-more{
-  display: none;
 width: 120px;
 justify-content: center;
 align-items: center;
 }
 .hidden {
-  display: block;}
+  display: none;}
 
   .loader {
     width: 48px;
