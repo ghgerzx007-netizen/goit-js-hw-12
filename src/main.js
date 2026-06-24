@@ -70,6 +70,7 @@ finally {
   loadMoreBtn.addEventListener("click", async e =>{
     e.preventDefault();
     page += 1;
+    hideLoadMoreButton();
     showLoader();
     try {
 const data = await getImagesByQuery(currentQuery,page,perPage);
@@ -79,7 +80,10 @@ const data = await getImagesByQuery(currentQuery,page,perPage);
 
 if (!hits || hits.length === 0) {
   hideLoadMoreButton();
-  return;
+   iziToast.info({ 
+        message: "We're sorry, but you've reached the end of search results."
+      });
+      return;
 }
 
 createGallery(hits);
